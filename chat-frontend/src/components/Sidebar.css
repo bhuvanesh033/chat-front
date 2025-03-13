@@ -1,0 +1,159 @@
+/* Sidebar.css */
+
+.sidebar {
+  width: 300px;
+  background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+  backdrop-filter: blur(6px);
+  border-right: 2px solid #fff3;
+  padding: 20px;
+  height: 100vh;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  color: #333;
+}
+
+.sidebar h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  color: #2d1e2f;
+  margin-bottom: 1rem;
+}
+
+/* Tab buttons */
+.tab-buttons button {
+  flex: 1;
+  padding: 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-buttons button.bg-blue-500 {
+  background: linear-gradient(to right, #ff6a00, #ee0979);
+  color: white;
+  box-shadow: 0 4px 10px rgba(255, 105, 135, 0.3);
+}
+
+.tab-buttons button.bg-gray-200 {
+  background-color: #fff6ea;
+  color: #444;
+}
+
+/* Chat/Group list */
+.conversation-list {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+.conversation-list li {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: #ffffffaa;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  font-weight: 500;
+  color: #1a1a1a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.conversation-list li:hover {
+  background: linear-gradient(145deg, #fbd786, #f7797d);
+  color: white;
+  transform: scale(1.02);
+}
+
+/* Footer buttons */
+.sidebar-footer button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background: linear-gradient(to right, #fc466b, #3f5efb);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(63, 94, 251, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-footer button:hover {
+  transform: scale(1.05);
+}
+
+/* Popup pane */
+.popup-pane {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffffee;
+  border-radius: 16px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.popup-pane h3 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  color: #f76b1c;
+}
+
+.popup-pane input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.popup-pane button {
+  margin-right: 10px;
+  padding: 8px 14px;
+  background-color: #f76b1c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.popup-pane button:hover {
+  background-color: #e65c00;
+}
+
+.popup-pane ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.popup-pane ul li {
+  display: flex;
+  justify-content: space-between;
+  background: #f9f9f9;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+}
+
+.popup-pane ul li button {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}

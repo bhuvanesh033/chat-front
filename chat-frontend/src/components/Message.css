@@ -1,0 +1,65 @@
+/* Message.css */
+
+.message-container {
+  display: flex;
+  margin: 10px;
+  max-width: 80%;
+}
+
+.message-container.mine {
+  justify-content: flex-end;
+}
+
+.message-container.other {
+  justify-content: flex-start;
+}
+
+.message {
+  padding: 12px 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  line-height: 1.4;
+  max-width: 100%;
+  word-wrap: break-word;
+  position: relative;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.message-container.mine .message {
+  background: linear-gradient(to right, #ff6a00, #ee0979);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message-container.other .message {
+  background: #ffffffaa;
+  color: #222;
+  border-bottom-left-radius: 4px;
+  backdrop-filter: blur(6px);
+}
+
+/* Sender's name on received messages */
+.sender-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #f76b1c;
+  margin-bottom: 6px;
+}
+
+/* The actual message text */
+.message-text {
+  margin: 0;
+}
+
+/* Entry animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
