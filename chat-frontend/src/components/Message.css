@@ -63,3 +63,44 @@
     transform: translateY(0);
   }
 }
+
+.ask-ai-button {
+  margin-top: 5px;
+  background-color: #4b90e2;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ai-prompt-box {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ai-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.send-ai-btn {
+  padding: 4px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ai-response {
+  margin-top: 8px;
+  background-color: #f1f1f1;
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 0.95em;
+}

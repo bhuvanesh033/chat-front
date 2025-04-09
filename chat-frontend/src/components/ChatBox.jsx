@@ -36,7 +36,7 @@ const ChatBox = ({ activeConversation }) => {
         }
       } catch (err) {
         console.error("Failed to load messages:", err);
-        alert("Failed to load messages.");
+        // alert("Failed to load messages.");
       } finally {
         setLoading(false);
       }
