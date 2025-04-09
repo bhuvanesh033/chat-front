@@ -1,0 +1,26 @@
+.chat-container {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #fdf0f0, #ffe3e3);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+  
+  .chat-container > * {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    background-color: #ffccd5;
+    border-right: 1px solid #f5b1b1;
+    padding: 16px;
+  }
+  
+  .chatbox {
+    background-color: #ffffffcc;
+    border-left: 1px solid #f5b1b1;
+    padding: 16px;
+  }
+  

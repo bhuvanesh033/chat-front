@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/api"; // Ensure axios instance is configured correctly
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const [mobileNumber, setMobileNumber] = useState("");

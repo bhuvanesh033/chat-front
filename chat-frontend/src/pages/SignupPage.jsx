@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/api";
+import "./SignupPage.css";
 
 const SignupPage = () => {
   const [mobileNumber, setMobileNumber] = useState("");
@@ -15,18 +16,22 @@ const SignupPage = () => {
     e.preventDefault();
 
     const requestData = {
-      mobileNumber,
+      phone_number: mobileNumber,  // Corrected field name
       name,
       password,
       description,
-      profile, // Adding profile as text
+      profile,
     };
 
+    console.log("Request Data:", requestData);  // Log the request data before sending
+
     try {
-      await axios.post("/create", requestData);
+      const response = await axios.post("/create", requestData);
+      console.log("Response:", response.data);  // Log the response
       alert("Signup successful! Please login.");
       navigate("/login");
     } catch (err) {
+      console.error("Signup Error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Failed to sign up. Try again.");
     }
   };
@@ -82,14 +87,13 @@ const SignupPage = () => {
             id="profile"
             value={profile}
             onChange={(e) => setProfile(e.target.value)}
-            placeholder="Enter your profile details (e.g., profession)"
             required
           />
         </div>
         {error && <p className="error-message">{error}</p>}
         <button type="submit">Sign Up</button>
       </form>
-      <button onClick={() => navigate("/login")} className="login-button">
+      <button onClick={() => navigate("/")} className="login-button">
         Back to Login
       </button>
     </div>
