@@ -2,23 +2,24 @@ import React, { useState, useEffect } from "react";
 import Message from "./Message"; // For individual message display
 import axios from "../api/api";
 import "./ChatBox.css";
+import socket from "../socket"; // Make sure the path is correct
 
 const ChatBox = ({ activeConversation }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const loggedInUserPhoneNumber = localStorage.getItem("userPhoneNumber"); // Get logged-in user's phone number
+  const loggedInUserPhoneNumber = localStorage.getItem("userPhoneNumber");
 
   useEffect(() => {
     if (!activeConversation) return;
 
     setMessages([]); // Clear previous messages when switching conversation
-    setLoading(true); // Set loading while fetching
+    setLoading(true);
+
+    socket.emit("join_conversation", activeConversation.id); // JOIN SOCKET ROOM
 
     const fetchMessages = async () => {
       try {
-        console.log("Active Conversation:", activeConversation);
-
         const response = await axios.get(
           `/messages/getMessages/${activeConversation.id}`,
           {
@@ -26,17 +27,11 @@ const ChatBox = ({ activeConversation }) => {
           }
         );
 
-        console.log("Messages response:", response.data);
-
         if (response.data && response.data.messages) {
           setMessages(response.data.messages);
-        } else {
-          console.log("No messages found for this conversation.");
-          // Messages already cleared above
         }
       } catch (err) {
         console.error("Failed to load messages:", err);
-        // alert("Failed to load messages.");
       } finally {
         setLoading(false);
       }
@@ -44,6 +39,17 @@ const ChatBox = ({ activeConversation }) => {
 
     fetchMessages();
   }, [activeConversation]);
+
+  useEffect(() => {
+    // Listen for real-time messages
+    socket.on("receive_message", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socket.off("receive_message"); // Clean up when component unmounts
+    };
+  }, []);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -61,10 +67,9 @@ const ChatBox = ({ activeConversation }) => {
         }
       );
 
-      console.log("New message response:", response.data);
-
       if (response.data && response.data.data) {
         const newMessageData = response.data.data;
+
         setMessages((prevMessages) => [
           ...prevMessages,
           {
@@ -75,6 +80,14 @@ const ChatBox = ({ activeConversation }) => {
           },
         ]);
         setNewMessage(""); // Clear input field
+
+        // Emit socket event for real-time update
+        socket.emit("send_message", {
+          convo_id: activeConversation.id,
+          text: newMessageData.text,
+          sender_phone_number: loggedInUserPhoneNumber,
+          timestamp: newMessageData.timestamp,
+        });
       }
     } catch (err) {
       console.error("Failed to send message:", err);
