@@ -4,100 +4,150 @@ import axios from "../api/api";
 import "./SignupPage.css";
 
 const SignupPage = () => {
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [description, setDescription] = useState("");
-  const [profile, setProfile] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        mobileNumber: "",
+        name: "",
+        password: "",
+        description: "",
+        profile: null
+    });
+    const [error, setError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-
-    const requestData = {
-      phone_number: mobileNumber,  // Corrected field name
-      name,
-      password,
-      description,
-      profile,
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    console.log("Request Data:", requestData);  // Log the request data before sending
+    const handleFileChange = (e) => {
+        setFormData(prev => ({
+            ...prev,
+            profile: e.target.files[0]
+        }));
+    };
 
-    try {
-      const response = await axios.post("/create", requestData);
-      console.log("Response:", response.data);  // Log the response
-      alert("Signup successful! Please login.");
-      navigate("/login");
-    } catch (err) {
-      console.error("Signup Error:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Failed to sign up. Try again.");
-    }
-  };
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError("");
 
-  return (
-    <div className="signup-page">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignup}>
-        <div>
-          <label htmlFor="mobileNumber">Mobile Number:</label>
-          <input
-            type="text"
-            id="mobileNumber"
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
-            required
-          />
+        const data = new FormData();
+        data.append("phone_number", formData.mobileNumber);
+        data.append("name", formData.name);
+        data.append("password", formData.password);
+        data.append("description", formData.description);
+        if (formData.profile) {
+            data.append("profile", formData.profile);
+        }
+
+        try {
+            const response = await axios.post("/create", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            console.log("Signup successful:", response.data);
+            alert("Account created successfully! Please login.");
+            navigate("/");
+        } catch (err) {
+            console.error("Signup error:", err.response?.data || err.message);
+            setError(err.response?.data?.error || "Failed to sign up. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="signup-page">
+            <h2>Sign Up</h2>
+            <form onSubmit={handleSignup}>
+                <div className="form-group">
+                    <label htmlFor="mobileNumber">Mobile Number:</label>
+                    <input
+                        type="text"
+                        id="mobileNumber"
+                        name="mobileNumber"
+                        value={formData.mobileNumber}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="name">Name (lowercase):</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    />
+                    {/* <small>8-12 characters with at least one number and special character</small> */}
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="description">Description:</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        rows="4"
+                        maxLength="100"
+                        required
+                    />
+                    {/* <small>Max 100 characters</small> */}
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="profile">Profile Image:</label>
+                    <input
+                        type="file"
+                        id="profile"
+                        name="profile"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        required
+                    />
+                    {/* <small>Accepted formats: JPEG, PNG, GIF, WEBP (max 5MB)</small> */}
+                </div>
+                
+                {error && <div className="error-message">{error}</div>}
+                
+                <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className={isSubmitting ? "submitting" : ""}
+                >
+                    {isSubmitting ? "Creating Account..." : "Sign Up"}
+                </button>
+            </form>
+            
+            <button 
+                onClick={() => navigate("/")} 
+                className="login-button"
+            >
+                Back to Login
+            </button>
         </div>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="4"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="profile">Profile:</label>
-          <input
-            type="text"
-            id="profile"
-            value={profile}
-            onChange={(e) => setProfile(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit">Sign Up</button>
-      </form>
-      <button onClick={() => navigate("/")} className="login-button">
-        Back to Login
-      </button>
-    </div>
-  );
+    );
 };
 
 export default SignupPage;

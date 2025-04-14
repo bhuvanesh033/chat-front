@@ -203,12 +203,12 @@ const Sidebar = ({ setActiveConversation }) => {
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
               />
-              <input
+              {/* <input
                 type="text"
                 placeholder="Group image URL (optional)"
                 value={groupImage}
                 onChange={(e) => setGroupImage(e.target.value)}
-              />
+              /> */}
               <input
                 type="text"
                 placeholder="Participant phone number"
