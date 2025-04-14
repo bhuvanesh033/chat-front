@@ -1,5 +1,4 @@
-/* Message.css */
-
+/* Core Message Styles */
 .message-container {
   display: flex;
   margin: 10px;
@@ -17,13 +16,14 @@
 .message {
   padding: 12px 16px;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   font-size: 14px;
   line-height: 1.4;
   max-width: 100%;
   word-wrap: break-word;
   position: relative;
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeInMessage 0.3s ease-in-out;
+  transition: transform 0.3s ease;
 }
 
 .message-container.mine .message {
@@ -33,30 +33,16 @@
 }
 
 .message-container.other .message {
-  background: #ffffffaa;
+  background: #ffffffbb;
   color: #222;
   border-bottom-left-radius: 4px;
   backdrop-filter: blur(6px);
 }
 
-/* Sender's name on received messages */
-.sender-name {
-  font-size: 12px;
-  font-weight: bold;
-  color: #f76b1c;
-  margin-bottom: 6px;
-}
-
-/* The actual message text */
-.message-text {
-  margin: 0;
-}
-
-/* Entry animation */
-@keyframes fadeIn {
+@keyframes fadeInMessage {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -64,43 +50,174 @@
   }
 }
 
-.ask-ai-button {
-  margin-top: 5px;
-  background-color: #4b90e2;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
+.sender-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #f76b1c;
+  margin-bottom: 6px;
 }
 
-.ai-prompt-box {
+.message-text {
+  margin: 0;
+}
+
+/* 🪄 Ask AI Button */
+.ask-ai-button {
   margin-top: 6px;
-  display: flex;
+  background: linear-gradient(135deg, #4b90e2, #3a7ad9);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
+  transition: all 0.25s ease-in-out;
+}
+
+.ask-ai-button::before {
+  content: "🪄";
+  font-size: 1rem;
+}
+
+.ask-ai-button:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #3a7ad9, #2d68c4);
+  box-shadow: 0 4px 10px rgba(75, 144, 226, 0.4);
+}
+
+/* Show/Hide Suggestions Button */
+.suggestions-button {
+  margin-top: 6px;
+  background: linear-gradient(to right, #6c63ff, #4b55e3);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: 8px;
+  transition: all 0.25s ease;
+}
+
+.suggestions-button:hover {
+  background: linear-gradient(to right, #5848e5, #3d3bcc);
+  transform: translateY(-1px);
+}
+
+/* ✍️ Prompt input box */
+.ai-prompt-box {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
   align-items: center;
 }
 
 .ai-input {
   flex: 1;
-  padding: 4px 6px;
+  padding: 6px 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border 0.2s ease;
 }
 
+.ai-input:focus {
+  border-color: #4b90e2;
+  outline: none;
+}
+
+/* ✅ Send button */
 .send-ai-btn {
-  padding: 4px 10px;
+  padding: 6px 12px;
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.25s;
 }
 
+.send-ai-btn:hover {
+  background-color: #218838;
+}
+
+/* 🤖 AI Response */
 .ai-response {
-  margin-top: 8px;
-  background-color: #f1f1f1;
-  padding: 6px;
+  margin-top: 10px;
+  background-color: #eef4ff;
+  color: #222;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: "Courier New", Courier, monospace;
+  animation: typing 1s steps(20, end);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* 💡 Suggestions */
+.smart-suggestions {
+  margin-top: 10px;
+  background-color: #f0f8ff;
+  padding: 10px;
+  border-radius: 8px;
+  animation: fadeInSuggestions 0.4s ease-in;
+}
+
+@keyframes fadeInSuggestions {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.smart-suggestions ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.suggestion {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.suggestion.clickable {
+  cursor: pointer;
+  color: #0077cc;
+  text-decoration: underline;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.suggestion.clickable:hover {
+  background-color: #e6f2ff;
   border-radius: 4px;
-  font-size: 0.95em;
+  padding: 2px 4px;
+}
+
+/* ⏳ Loading Text */
+.loading {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 8px;
+  font-style: italic;
 }

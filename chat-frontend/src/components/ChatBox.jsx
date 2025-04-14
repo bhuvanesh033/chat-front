@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Message from "./Message"; // For individual message display
+import Message from "./Message";
 import axios from "../api/api";
 import "./ChatBox.css";
-import socket from "../socket"; // Make sure the path is correct
+import socket from "../socket";
 
 const ChatBox = ({ activeConversation }) => {
   const [messages, setMessages] = useState([]);
@@ -13,17 +13,19 @@ const ChatBox = ({ activeConversation }) => {
   useEffect(() => {
     if (!activeConversation) return;
 
-    setMessages([]); // Clear previous messages when switching conversation
+    setMessages([]);
     setLoading(true);
 
-    socket.emit("join_conversation", activeConversation.id); // JOIN SOCKET ROOM
+    socket.emit("join_conversation", activeConversation.id);
 
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
           `/messages/getMessages/${activeConversation.id}`,
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 
@@ -41,58 +43,62 @@ const ChatBox = ({ activeConversation }) => {
   }, [activeConversation]);
 
   useEffect(() => {
-    // Listen for real-time messages
     socket.on("receive_message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-      socket.off("receive_message"); // Clean up when component unmounts
+      socket.off("receive_message");
     };
   }, []);
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
+  const sendMessage = async (text) => {
+    if (!text.trim()) return;
 
     try {
       const response = await axios.post(
         "/messages/send",
         {
           convo_id: activeConversation.id,
-          text: newMessage,
+          text,
         },
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
 
       if (response.data && response.data.data) {
         const newMessageData = response.data.data;
 
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            message_id: newMessageData.message_id,
-            sender_phone_number: newMessageData.sender_number,
-            text: newMessageData.text,
-            timestamp: newMessageData.timestamp,
-          },
-        ]);
-        setNewMessage(""); // Clear input field
+        const finalMessage = {
+          message_id: newMessageData.message_id,
+          sender_phone_number: newMessageData.sender_number,
+          text: newMessageData.text,
+          timestamp: newMessageData.timestamp,
+        };
 
-        // Emit socket event for real-time update
+        // setMessages((prevMessages) => [...prevMessages, finalMessage]);
+
         socket.emit("send_message", {
           convo_id: activeConversation.id,
           text: newMessageData.text,
           sender_phone_number: loggedInUserPhoneNumber,
           timestamp: newMessageData.timestamp,
         });
+
+        setNewMessage("");
       }
     } catch (err) {
       console.error("Failed to send message:", err);
       alert("Failed to send message.");
     }
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    sendMessage(newMessage);
   };
 
   return (
@@ -109,6 +115,7 @@ const ChatBox = ({ activeConversation }) => {
                   key={message.message_id}
                   message={message}
                   isMine={message.sender_phone_number === loggedInUserPhoneNumber}
+                  onSendSmartSuggestion={sendMessage}
                 />
               ))
             ) : (

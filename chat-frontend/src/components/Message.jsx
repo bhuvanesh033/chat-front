@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Message.css";
 
-const Message = ({ message }) => {
-  const loggedInUserPhoneNumber = localStorage.getItem("userPhoneNumber");
-  const isMine = message.sender_phone_number === loggedInUserPhoneNumber;
-
+const Message = ({ message, isMine, onSendSmartSuggestion }) => {
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+
   const handleAskAI = async () => {
     if (!prompt.trim()) return;
-
     setLoading(true);
     try {
       const response = await axios.post("http://localhost:5000/api/ai/ask", {
@@ -29,6 +29,33 @@ const Message = ({ message }) => {
     }
   };
 
+  const handleShowSuggestions = async () => {
+    if (suggestions.length > 0) {
+      setShowSuggestions(!showSuggestions);
+      return;
+    }
+
+    setSuggestionsLoading(true);
+    try {
+      const response = await axios.post("http://localhost:5000/api/ai/smart-suggestions", {
+        message: message.text,
+      });
+      setSuggestions(response.data.suggestions || []);
+      setShowSuggestions(true);
+    } catch (err) {
+      console.error("Smart Suggestions Error:", err);
+    } finally {
+      setSuggestionsLoading(false);
+    }
+  };
+
+  const handleSuggestionClick = (e, suggestionText) => {
+    e.preventDefault(); // 🛑 prevent link default
+    if (onSendSmartSuggestion) {
+      onSendSmartSuggestion(suggestionText);
+    }
+  };
+
   return (
     <div className={`message-container ${isMine ? "mine" : "other"}`}>
       <div className="message">
@@ -40,14 +67,19 @@ const Message = ({ message }) => {
         <p className="message-text">{message.text}</p>
 
         {!isMine && (
-  <button
-    className="ask-ai-button"
-    onClick={() => setShowPromptInput(!showPromptInput)}
-  >
-    Ask AI
-  </button>
-)}
+          <>
+            <button
+              className="ask-ai-button"
+              onClick={() => setShowPromptInput(!showPromptInput)}
+            >
+              Ask AI
+            </button>
 
+            <button className="suggestions-button" onClick={handleShowSuggestions}>
+              {showSuggestions ? "Hide Suggestions" : "Show Suggestions"}
+            </button>
+          </>
+        )}
 
         {showPromptInput && (
           <div className="ai-prompt-box">
@@ -69,6 +101,30 @@ const Message = ({ message }) => {
             <strong>AI:</strong> {aiResponse}
           </div>
         )}
+
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="smart-suggestions">
+            <strong>Suggestions:</strong>
+            <ul>
+              {suggestions.map((sug, idx) => {
+                const cleanText = sug.replace(/^\d+\.\s*/, "");
+                return (
+                  <li key={idx}>
+                    <a
+                      href="#"
+                      className="suggestion clickable"
+                      onClick={(e) => handleSuggestionClick(e, cleanText)}
+                    >
+                      {cleanText}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {suggestionsLoading && <p className="loading">Fetching smart replies...</p>}
       </div>
     </div>
   );
