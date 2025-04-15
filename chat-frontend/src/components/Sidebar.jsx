@@ -6,10 +6,10 @@ import "./Sidebar.css";
 const Sidebar = ({ setActiveConversation }) => {
   const [individualChats, setIndividualChats] = useState([]);
   const [groupChats, setGroupChats] = useState([]);
-  const [activeTab, setActiveTab] = useState("chat"); // "chat" or "group"
+  const [activeTab, setActiveTab] = useState("chat");
 
   const [showPane, setShowPane] = useState(false);
-  const [paneType, setPaneType] = useState(""); // "chat" or "group"
+  const [paneType, setPaneType] = useState("");
   const [groupName, setGroupName] = useState("");
   const [groupImage, setGroupImage] = useState("");
   const [participants, setParticipants] = useState([]);
@@ -82,7 +82,6 @@ const Sidebar = ({ setActiveConversation }) => {
         alert("Group created!");
       }
 
-      // Refresh chat lists
       const [individualRes, groupRes] = await Promise.all([
         axios.get("/conversations/individual", {
           headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +94,6 @@ const Sidebar = ({ setActiveConversation }) => {
       setIndividualChats(individualRes.data);
       setGroupChats(groupRes.data);
 
-      // Reset form
       setShowPane(false);
       setGroupName("");
       setGroupImage("");
@@ -108,10 +106,10 @@ const Sidebar = ({ setActiveConversation }) => {
   };
 
   return (
-    <div className="sidebar">
-      <h2>Conversations</h2>
+    <div className="sidebar p-4">
+      <h2 className="text-xl font-semibold mb-4">Conversations</h2>
 
-      {/* Toggle Buttons */}
+      {/* Toggle Tabs */}
       <div className="tab-buttons flex space-x-2 mb-2">
         <button
           className={`px-2 py-1 rounded ${activeTab === "chat" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
@@ -127,13 +125,18 @@ const Sidebar = ({ setActiveConversation }) => {
         </button>
       </div>
 
-      {/* Chat or Group List */}
+      {/* Chat List */}
       <ul className="conversation-list">
         {activeTab === "chat" ? (
           individualChats.length > 0 ? (
             individualChats.map((conversation) => {
               const otherUser = conversation.OtherParticipant?.[0]?.User;
-              const displayName = otherUser?.name || "Unknown";
+              const displayName = otherUser?.name || "Unknown User";
+              const profilePicture = otherUser?.profile || "/default-avatar.png";
+
+
+              const lastMessage =
+                conversation.Messages?.[conversation.Messages.length - 1]?.text || "No messages yet";
 
               return (
                 <li
@@ -144,8 +147,17 @@ const Sidebar = ({ setActiveConversation }) => {
                       name: displayName,
                     })
                   }
+                  className="individual-chat-item flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-100"
                 >
-                  {displayName}
+                  <img
+                    src={profilePicture}
+                    alt={displayName}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold">{displayName}</div>
+                    <div className="text-sm">{lastMessage}</div>
+                  </div>
                 </li>
               );
             })
@@ -162,8 +174,12 @@ const Sidebar = ({ setActiveConversation }) => {
                   name: conversation.group_name || "Unnamed Group",
                 })
               }
+              className="group-chat-item p-2 cursor-pointer hover:bg-gray-100"
             >
-              {conversation.group_name || "Unnamed Group"}
+              <div>
+                <div className="font-semibold">{conversation.group_name || "Unnamed Group"}</div>
+                <div className="text-sm">{conversation.participants?.length || 0} participants</div>
+              </div>
             </li>
           ))
         ) : (
@@ -172,29 +188,42 @@ const Sidebar = ({ setActiveConversation }) => {
       </ul>
 
       {/* Footer Buttons */}
-      <div className="sidebar-footer mt-4">
-        <button onClick={() => { setPaneType("chat"); setShowPane(true); }}>
+      <div className="sidebar-footer mt-4 flex space-x-2">
+        <button
+          onClick={() => {
+            setPaneType("chat");
+            setShowPane(true);
+          }}
+          className="px-2 py-1 bg-green-500 text-white rounded"
+        >
           New Chat
         </button>
-        <button onClick={() => { setPaneType("group"); setShowPane(true); }}>
+        <button
+          onClick={() => {
+            setPaneType("group");
+            setShowPane(true);
+          }}
+          className="px-2 py-1 bg-purple-500 text-white rounded"
+        >
           New Group
         </button>
       </div>
 
-      {/* Popup for New Chat/Group */}
+      {/* Create Chat/Group Pane */}
       {showPane && (
-        <div className="popup-pane">
-          <h3>{paneType === "chat" ? "Start New Chat" : "Create Group"}</h3>
+        <div className="popup-pane mt-4 p-4 bg-gray-100 rounded shadow">
+          <h3 className="text-lg font-semibold mb-2">
+            {paneType === "chat" ? "Start New Chat" : "Create Group"}
+          </h3>
 
           {paneType === "chat" ? (
-            <>
-              <input
-                type="text"
-                placeholder="Enter phone number"
-                value={participantInput}
-                onChange={(e) => setParticipantInput(e.target.value)}
-              />
-            </>
+            <input
+              type="text"
+              placeholder="Enter phone number"
+              value={participantInput}
+              onChange={(e) => setParticipantInput(e.target.value)}
+              className="w-full border p-1 mb-2"
+            />
           ) : (
             <>
               <input
@@ -202,33 +231,50 @@ const Sidebar = ({ setActiveConversation }) => {
                 placeholder="Group name"
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
+                className="w-full border p-1 mb-2"
               />
-              {/* <input
-                type="text"
-                placeholder="Group image URL (optional)"
-                value={groupImage}
-                onChange={(e) => setGroupImage(e.target.value)}
-              /> */}
               <input
                 type="text"
                 placeholder="Participant phone number"
                 value={participantInput}
                 onChange={(e) => setParticipantInput(e.target.value)}
+                className="w-full border p-1 mb-2"
               />
-              <button onClick={addParticipant}>Add Participant</button>
-              <ul>
+              <button
+                onClick={addParticipant}
+                className="bg-blue-500 text-white px-2 py-1 rounded mb-2"
+              >
+                Add Participant
+              </button>
+              <ul className="mb-2">
                 {participants.map((p, index) => (
-                  <li key={index}>
-                    {p} <button onClick={() => removeParticipant(p)}>❌</button>
+                  <li key={index} className="flex justify-between items-center">
+                    {p}
+                    <button
+                      onClick={() => removeParticipant(p)}
+                      className="text-red-500"
+                    >
+                      ❌
+                    </button>
                   </li>
                 ))}
               </ul>
             </>
           )}
 
-          <div className="pane-buttons">
-            <button onClick={handleCreate}>Create</button>
-            <button onClick={() => setShowPane(false)}>Cancel</button>
+          <div className="pane-buttons flex space-x-2">
+            <button
+              onClick={handleCreate}
+              className="bg-green-600 text-white px-2 py-1 rounded"
+            >
+              Create
+            </button>
+            <button
+              onClick={() => setShowPane(false)}
+              className="bg-gray-400 text-white px-2 py-1 rounded"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}

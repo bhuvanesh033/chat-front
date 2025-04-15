@@ -23,10 +23,15 @@
 }
 
 /* Tab buttons */
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .tab-buttons button {
   flex: 1;
   padding: 10px;
-  margin: 0 5px;
   border: none;
   border-radius: 10px;
   font-weight: 500;
@@ -45,7 +50,7 @@
   color: #444;
 }
 
-/* Chat/Group list */
+/* Conversation list */
 .conversation-list {
   flex: 1;
   list-style: none;
@@ -65,6 +70,9 @@
   font-weight: 500;
   color: #1a1a1a;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .conversation-list li:hover {
@@ -73,87 +81,100 @@
   transform: scale(1.02);
 }
 
+.conversation-list img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Footer buttons */
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+}
+
 .sidebar-footer button {
-  width: 100%;
+  flex: 1;
   padding: 10px;
-  margin-top: 10px;
   background: linear-gradient(to right, #fc466b, #3f5efb);
   color: white;
-  font-weight: bold;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(63, 94, 251, 0.3);
-  transition: transform 0.2s ease;
+  transition: background 0.3s ease;
 }
 
 .sidebar-footer button:hover {
-  transform: scale(1.05);
+  background: linear-gradient(to right, #ff6a00, #ee0979);
 }
 
 /* Popup pane */
 .popup-pane {
-  position: fixed;
-  top: 20%;
-  left: 70%;
-  transform: translateX(-50%);
-  background: #ffffffee;
-  border-radius: 16px;
-  padding: 20px;
-  width: 300px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-}
-
-.popup-pane h3 {
-  font-size: 1.25rem;
-  margin-bottom: 12px;
-  color: #f76b1c;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .popup-pane input {
   width: 100%;
   padding: 8px;
-  margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 14px;
+  margin-bottom: 10px;
+  font-family: "Poppins", sans-serif;
 }
 
 .popup-pane button {
-  margin-right: 10px;
-  padding: 8px 14px;
-  background-color: #f76b1c;
-  color: white;
+  padding: 8px 12px;
   border: none;
   border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.popup-pane button:hover {
-  background-color: #e65c00;
+.popup-pane .bg-blue-500 {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.popup-pane .bg-blue-500:hover {
+  background-color: #2563eb;
+}
+
+.popup-pane .pane-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.popup-pane .pane-buttons button {
+  font-size: 0.9rem;
 }
 
 .popup-pane ul {
   list-style: none;
-  padding: 0;
-  margin-top: 10px;
+  padding-left: 0;
 }
 
 .popup-pane ul li {
   display: flex;
   justify-content: space-between;
-  background: #f9f9f9;
-  padding: 6px 10px;
-  margin-bottom: 6px;
-  border-radius: 6px;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.9rem;
 }
 
 .popup-pane ul li button {
   background: none;
   border: none;
-  color: red;
-  font-weight: bold;
+  font-size: 1rem;
+  color: #e53e3e;
   cursor: pointer;
 }
