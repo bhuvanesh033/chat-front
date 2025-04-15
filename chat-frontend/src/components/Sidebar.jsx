@@ -156,7 +156,7 @@ const Sidebar = ({ setActiveConversation }) => {
                   />
                   <div>
                     <div className="font-semibold">{displayName}</div>
-                    <div className="text-sm">{lastMessage}</div>
+                    {/* <div className="text-sm">{lastMessage}</div> */}
                   </div>
                 </li>
               );
