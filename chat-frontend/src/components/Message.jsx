@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Message.css";
 
@@ -11,6 +11,17 @@ const Message = ({ message, isMine, onSendSmartSuggestion }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+
+  // Ref for the message container to handle scroll
+  const messagesEndRef = useRef(null);
+
+  // Scroll to the bottom when a new message is displayed or when the component re-renders
+  useEffect(() => {
+    // Set scroll position directly to the bottom of the message container
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto" }); // No smooth scroll here
+    }
+  }, [message]); // Dependency on message to scroll to the bottom when a new message is rendered
 
   const handleAskAI = async () => {
     if (!prompt.trim()) return;
@@ -125,6 +136,9 @@ const Message = ({ message, isMine, onSendSmartSuggestion }) => {
         )}
 
         {suggestionsLoading && <p className="loading">Fetching smart replies...</p>}
+
+        {/* This div is responsible for scrolling to the bottom */}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );
