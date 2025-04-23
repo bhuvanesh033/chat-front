@@ -79,8 +79,6 @@ const ChatBox = ({ activeConversation }) => {
           timestamp: newMessageData.timestamp,
         };
 
-        // setMessages((prevMessages) => [...prevMessages, finalMessage]);
-
         socket.emit("send_message", {
           convo_id: activeConversation.id,
           text: newMessageData.text,
@@ -105,7 +103,23 @@ const ChatBox = ({ activeConversation }) => {
     <div className="chatbox">
       {activeConversation ? (
         <>
-          <h3>Chat with {activeConversation.name}</h3>
+          <div className="chat-header">
+            {/* Displaying the profile picture of the user being chatted with */}
+            {activeConversation.profilePicture ? (
+              <img
+                src={activeConversation.profilePicture}
+                alt={`${activeConversation.name}'s profile`}
+                className="profile-picture"
+              />
+            ) : (
+              <img
+                src="/default-avatar.png"
+                alt="Default profile"
+                className="profile-picture"
+              />
+            )}
+            <h3> {activeConversation.name}</h3>
+          </div>
           <div className="messages">
             {loading ? (
               <p>Loading messages...</p>

@@ -1,5 +1,4 @@
-/* Sidebar.css */
-
+/* Sidebar */
 .sidebar {
   width: 300px;
   background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
@@ -22,7 +21,7 @@
   margin-bottom: 1rem;
 }
 
-/* Tab buttons */
+/* Tab Buttons */
 .tab-buttons {
   display: flex;
   gap: 10px;
@@ -50,7 +49,7 @@
   color: #444;
 }
 
-/* Conversation list */
+/* Conversation List */
 .conversation-list {
   flex: 1;
   list-style: none;
@@ -88,17 +87,16 @@
   object-fit: cover;
 }
 
-/* Footer buttons */
+/* Sidebar Footer */
 .sidebar-footer {
   margin-top: auto;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
 .sidebar-footer button {
-  flex: 1;
-  padding: 10px;
-  background: linear-gradient(to right, #fc466b, #3f5efb);
+  padding: 12px;
   color: white;
   border: none;
   border-radius: 10px;
@@ -111,7 +109,28 @@
   background: linear-gradient(to right, #ff6a00, #ee0979);
 }
 
-/* Popup pane */
+.sidebar-footer .new-chat {
+  background: linear-gradient(to right, #ff6a00, #ee0979);
+}
+
+.sidebar-footer .new-group-chat {
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+}
+
+.sidebar-footer .logout {
+  background: linear-gradient(to right, #0aed78, #f7b314);
+}
+
+.sidebar-footer .login {
+  background: linear-gradient(to right, #34d399, #10b981); /* Unique theme for login */
+  color: rgb(255, 255, 255);
+}
+
+.sidebar-footer .login:hover {
+  background: linear-gradient(to right, #16a34a, #15803d); /* Darker tone on hover */
+}
+
+/* Popup Pane */
 .popup-pane {
   background: rgba(255, 255, 255, 0.85);
   border-radius: 12px;

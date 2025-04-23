@@ -1,4 +1,4 @@
-/* Core Message Styles */
+ 
 .message-container {
   display: flex;
   margin: 10px;
@@ -61,7 +61,7 @@
   margin: 0;
 }
 
-/* 🪄 Ask AI Button */
+ 
 .ask-ai-button {
   margin-top: 6px;
   background: linear-gradient(135deg, #4b90e2, #3a7ad9);
@@ -88,7 +88,7 @@
   box-shadow: 0 4px 10px rgba(75, 144, 226, 0.4);
 }
 
-/* Show/Hide Suggestions Button */
+ 
 .suggestions-button {
   margin-top: 6px;
   background: linear-gradient(to right, #6c63ff, #4b55e3);
@@ -107,7 +107,7 @@
   transform: translateY(-1px);
 }
 
-/* ✍️ Prompt input box */
+ 
 .ai-prompt-box {
   margin-top: 8px;
   display: flex;
@@ -129,7 +129,7 @@
   outline: none;
 }
 
-/* ✅ Send button */
+ 
 .send-ai-btn {
   padding: 6px 12px;
   background-color: #28a745;
@@ -145,7 +145,7 @@
   background-color: #218838;
 }
 
-/* 🤖 AI Response */
+ 
 .ai-response {
   margin-top: 10px;
   background-color: #eef4ff;
@@ -168,7 +168,7 @@
   }
 }
 
-/* 💡 Suggestions */
+ 
 .smart-suggestions {
   margin-top: 10px;
   background-color: #f0f8ff;
@@ -214,7 +214,7 @@
   padding: 2px 4px;
 }
 
-/* ⏳ Loading Text */
+ 
 .loading {
   font-size: 0.85rem;
   color: #888;

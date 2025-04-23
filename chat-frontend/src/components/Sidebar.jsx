@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "../api/api";
+import { jwtDecode } from "jwt-decode";
+// Make sure to install this: npm install jwt-decode
 import "./Sidebar.css";
 
 const Sidebar = ({ setActiveConversation }) => {
@@ -14,6 +16,8 @@ const Sidebar = ({ setActiveConversation }) => {
   const [groupImage, setGroupImage] = useState("");
   const [participants, setParticipants] = useState([]);
   const [participantInput, setParticipantInput] = useState("");
+
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -36,7 +40,30 @@ const Sidebar = ({ setActiveConversation }) => {
       }
     };
 
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        let decoded = {};
+        if (token) {
+          decoded = jwtDecode(token);
+        }
+
+        const response = await axios.get("/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUserProfile({
+          ...response.data,
+          profile: response.data.profile || decoded.profile || null,
+        });
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
     fetchChats();
+    fetchUserProfile();
   }, []);
 
   const addParticipant = () => {
@@ -105,9 +132,29 @@ const Sidebar = ({ setActiveConversation }) => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
   return (
     <div className="sidebar p-4">
       <h2 className="text-xl font-semibold mb-4">Conversations</h2>
+
+      {/* User Profile Section */}
+      {userProfile && (
+        <div className="user-profile flex items-center space-x-2 mb-4">
+          <img
+            src={userProfile.profile || "/default-avatar.png"}
+            alt="User Profile"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <div>
+            <div className="font-semibold">{userProfile.name}</div>
+            <div className="text-sm text-gray-500">{userProfile.email}</div>
+          </div>
+        </div>
+      )}
 
       {/* Toggle Tabs */}
       <div className="tab-buttons flex space-x-2 mb-2">
@@ -134,10 +181,6 @@ const Sidebar = ({ setActiveConversation }) => {
               const displayName = otherUser?.name || "Unknown User";
               const profilePicture = otherUser?.profile || "/default-avatar.png";
 
-
-              const lastMessage =
-                conversation.Messages?.[conversation.Messages.length - 1]?.text || "No messages yet";
-
               return (
                 <li
                   key={conversation.id}
@@ -145,6 +188,7 @@ const Sidebar = ({ setActiveConversation }) => {
                     setActiveConversation({
                       ...conversation,
                       name: displayName,
+                      profilePicture,
                     })
                   }
                   className="individual-chat-item flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-100"
@@ -156,7 +200,6 @@ const Sidebar = ({ setActiveConversation }) => {
                   />
                   <div>
                     <div className="font-semibold">{displayName}</div>
-                    {/* <div className="text-sm">{lastMessage}</div> */}
                   </div>
                 </li>
               );
@@ -172,6 +215,7 @@ const Sidebar = ({ setActiveConversation }) => {
                 setActiveConversation({
                   ...conversation,
                   name: conversation.group_name || "Unnamed Group",
+                  profilePicture: conversation.image || "/default-avatar.png",
                 })
               }
               className="group-chat-item p-2 cursor-pointer hover:bg-gray-100"
@@ -278,6 +322,16 @@ const Sidebar = ({ setActiveConversation }) => {
           </div>
         </div>
       )}
+
+      {/* Logout Button */}
+      <div className="logout mt-4">
+        <button
+          onClick={handleLogout}
+          className="px-2 py-1 bg-red-500 text-white rounded w-full"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
