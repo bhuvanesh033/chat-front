@@ -5,5 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true
+  },
+  preview: {
+    host: true,
+    allowedHosts: ['chat-front-b9jo.onrender.com']
   }
 });
